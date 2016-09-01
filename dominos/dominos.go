@@ -10,6 +10,44 @@ type MenuItem struct {
 	Code string
 }
 
+type Address struct {
+	Type         string `json:",omitempty"`
+	Street       string `json:",omitempty"`
+	City         string `json:",omitempty"`
+	Region       string `json:",omitempty"`
+	PostalCode   string `json:",omitempty"`
+	StreetNumber string `json:",omitempty"`
+	StreetName   string `json:",omitempty"`
+}
+
+type Product struct {
+	Id int `json:",omitempty"`
+	Code string `json:",omitempty"`
+	Qty int `json:",omitempty"`
+	CategoryCode string `json:",omitempty"`
+	Price float32 `json:",omitempty"`
+	Name string `json:",omitempty"`
+}
+
+type Order struct {
+	Id        string   `json:"OrderID,omitempty"`
+	Address   *Address `json:",omitempty"`
+	Email     string   `json:",omitempty"`
+	FirstName string   `json:",omitempty"`
+	LastName  string   `json:",omitempty"`
+	Phone     string   `json:",omitempty"`
+	ServiceMethod string `json:",omitempty"`
+	StoreId string `json:",omitempty"`
+	EstimatedWaitMinutes string `json:",omitempty"`
+	Products  []Product `json:",omitempty"`
+}
+
+func ParseOrder(data []byte) *Order {
+	order := Order{}
+	json.Unmarshal(data, &order)
+	return &order
+}
+
 func ParseMenu(data []byte) []MenuItem {
 	var i interface{}
 	err := json.Unmarshal(data, &i)
