@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/boltdb/bolt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -97,6 +98,19 @@ func (oh *OrdersHandler) GetOrdersHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (oh *OrdersHandler) PostOrdersHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte("{\"id\": \"test\"}"))
+}
+
+func (oh *OrdersHandler) PriceOrderHandler(w http.ResponseWriter, r *http.Request) {
+	req, _ := http.NewRequest("POST", DominosURL+"/price-order", nil)
+	req.Header.Add("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, _ := client.Do(req)
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte("{\"id\": \"test\"}"))
 }

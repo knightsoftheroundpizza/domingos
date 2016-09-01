@@ -7,9 +7,8 @@ import (
 	"net/http"
 )
 
-const (
-	DOMINOS_URL = "https://order.dominos.ca/power/"
-)
+//DominosURL is root URL
+const DominosURL = "https://order.dominos.ca/power/"
 
 func main() {
 	r := mux.NewRouter()
@@ -20,13 +19,16 @@ func main() {
 	}
 	defer db.Close()
 
+	//ORDERS
 	oh := CreateOrdersHandler(db)
-
-	// Routes consist of a path and a handler function.
 	r.HandleFunc("/orders", oh.GetOrdersHandler).Methods("GET")
 	r.HandleFunc("/orders", oh.PostOrdersHandler).Methods("POST")
+	r.HandleFunc("/orders/price", oh.PriceOrderHandler).Methods("POST")
 	r.HandleFunc("/orders/{id}", oh.PostOrdersOnIdHandler).Methods("POST")
 
-	// Bind to a port and pass our router in
+	//STORES
+	sh := StoresHandler{}
+	r.HandleFunc("/store/{storeId}/menu", sh.GetStoreMenuHandler).Methods("GET")
+
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
