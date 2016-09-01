@@ -1,8 +1,8 @@
 package dominos
 
 import (
-	"log"
 	"encoding/json"
+	"log"
 )
 
 type MenuItem struct {
@@ -21,25 +21,25 @@ type Address struct {
 }
 
 type Product struct {
-	Id int `json:",omitempty"`
-	Code string `json:",omitempty"`
-	Qty int `json:",omitempty"`
-	CategoryCode string `json:",omitempty"`
-	Price float32 `json:",omitempty"`
-	Name string `json:",omitempty"`
+	Id           int     `json:",omitempty"`
+	Code         string  `json:",omitempty"`
+	Qty          int     `json:",omitempty"`
+	CategoryCode string  `json:",omitempty"`
+	Price        float32 `json:",omitempty"`
+	Name         string  `json:",omitempty"`
 }
 
 type Order struct {
-	Id        string   `json:"OrderID,omitempty"`
-	Address   *Address `json:",omitempty"`
-	Email     string   `json:",omitempty"`
-	FirstName string   `json:",omitempty"`
-	LastName  string   `json:",omitempty"`
-	Phone     string   `json:",omitempty"`
-	ServiceMethod string `json:",omitempty"`
-	StoreId string `json:",omitempty"`
-	EstimatedWaitMinutes string `json:",omitempty"`
-	Products  []Product `json:",omitempty"`
+	Id                   string    `json:"OrderID,omitempty"`
+	Address              *Address  `json:",omitempty"`
+	Email                string    `json:",omitempty"`
+	FirstName            string    `json:",omitempty"`
+	LastName             string    `json:",omitempty"`
+	Phone                string    `json:",omitempty"`
+	ServiceMethod        string    `json:",omitempty"`
+	StoreId              string    `json:",omitempty"`
+	EstimatedWaitMinutes string    `json:",omitempty"`
+	Products             []Product `json:",omitempty"`
 }
 
 func ParseOrder(data []byte) *Order {
