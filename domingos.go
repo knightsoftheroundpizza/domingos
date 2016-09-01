@@ -1,11 +1,16 @@
 package main
 
 import (
-    "net/http"
-    "log"
-    "github.com/gorilla/mux"
-    "github.com/boltdb/bolt"
+	"github.com/boltdb/bolt"
+	"github.com/gorilla/mux"
+	"log"
+	"net/http"
 )
+
+const (
+	DOMINOS_URL = "https://order.dominos.ca/power/"
+)
+
 
 func main() {
     r := mux.NewRouter()
