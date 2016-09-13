@@ -7,6 +7,8 @@ import (
 	"github.com/knightsoftheroundpizza/domingos/dominos"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 const ORDER_BUCKET = "orders"
@@ -15,7 +17,7 @@ type Order struct {
 	Id     string `json:"id,omitempty"`
 	Status string `json:"status,omitempty"`
 
-	Street       string `json:"street"`
+	StreetName   string `json:"streetName"`
 	StreetNumber int    `json:"streetNumber"`
 	City         string `json:"city"`
 	Province     string `json:"province"`
@@ -125,7 +127,7 @@ func (oh *OrdersHandler) PostOrdersHandler(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		w.Write([]byte(`{"error":"Invalid order object"}`))
 	} else {
-		marshalled, _ := json.Marshal(order)
+		marshalled, _ := json.Marshal(GetDominosOrder(order))
 		w.Write(marshalled)
 	}
 
@@ -138,6 +140,24 @@ func (oh *OrdersHandler) PostOrdersHandler(w http.ResponseWriter, r *http.Reques
 	// w.Header().Set("Content-Type", "application/json")
 	// w.Write(body)
 
+}
+
+func GetDominosOrder(order Order) dominos.Order {
+
+	return dominos.Order{
+		Address: &dominos.Address{
+			Type:         "House",
+			StreetName:   strings.ToUpper(order.StreetName),
+			StreetNumber: strconv.Itoa(order.StreetNumber),
+			City:         strings.ToUpper(order.City),
+			Region:       strings.ToUpper(order.Province),
+			PostalCode:   strings.ToUpper(order.PostalCode),
+		},
+		Email:     order.Email,
+		FirstName: order.FirstName,
+		LastName:  order.LastName,
+		StoreId:   order.storeId,
+	}
 }
 
 //Pricing an order

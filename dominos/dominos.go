@@ -30,16 +30,16 @@ type Product struct {
 }
 
 type Order struct {
-	Id                   string    `json:"OrderID,omitempty"`
-	Address              *Address  `json:",omitempty"`
-	Email                string    `json:",omitempty"`
-	FirstName            string    `json:",omitempty"`
-	LastName             string    `json:",omitempty"`
-	Phone                string    `json:",omitempty"`
-	ServiceMethod        string    `json:",omitempty"`
-	StoreId              string    `json:",omitempty"`
-	EstimatedWaitMinutes string    `json:",omitempty"`
-	Products             []Product `json:",omitempty"`
+	Id                   string             `json:"OrderID,omitempty"`
+	Address              *Address           `json:",omitempty"`
+	Email                string             `json:",omitempty"`
+	FirstName            string             `json:",omitempty"`
+	LastName             string             `json:",omitempty"`
+	Phone                string             `json:",omitempty"`
+	ServiceMethod        string             `json:",omitempty"`
+	StoreId              string             `json:"StoreID,omitempty"`
+	EstimatedWaitMinutes string             `json:",omitempty"`
+	Products             []Product          `json:",omitempty"`
 	Amounts              map[string]float32 `json:",omitempty"`
 }
 
