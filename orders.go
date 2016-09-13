@@ -6,6 +6,7 @@ import (
 	"github.com/boltdb/bolt"
 	"io/ioutil"
 	"net/http"
+	"github.com/knightsoftheroundpizza/domingos/dominos"
 )
 
 const ORDER_BUCKET = "orders"
@@ -103,16 +104,21 @@ func (oh *OrdersHandler) PostOrdersHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (oh *OrdersHandler) PriceOrderHandler(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest("POST", DominosURL+"/price-order", nil)
+	req, _ := http.NewRequest("POST", DominosURL+"/price-order", r.Body)
 	req.Header.Add("Content-Type", "application/json")
 	client := &http.Client{}
 	resp, _ := client.Do(req)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
+	order := dominos.ParseOrder(body)
+
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(body)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte("{\"id\": \"test\"}"))
+	result, _ := json.Marshal(map[string]float32{
+		"Net": order.Amounts["Net"],
+		"Tax": order.Amounts["Tax"],
+		"Total": order.Amounts["Payment"],
+	})
+	w.Write(result)
 }
 
 func (oh *OrdersHandler) PostOrdersOnIdHandler(w http.ResponseWriter, r *http.Request) {

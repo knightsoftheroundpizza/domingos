@@ -40,12 +40,17 @@ type Order struct {
 	StoreId              string    `json:",omitempty"`
 	EstimatedWaitMinutes string    `json:",omitempty"`
 	Products             []Product `json:",omitempty"`
+	Amounts              map[string]float32 `json:",omitempty"`
+}
+
+type orderResult struct {
+	Order *Order `json:",omitempty"`
 }
 
 func ParseOrder(data []byte) *Order {
-	order := Order{}
-	json.Unmarshal(data, &order)
-	return &order
+	result := orderResult{}
+	json.Unmarshal(data, &result)
+	return result.Order
 }
 
 func ParseMenu(data []byte) []MenuItem {
