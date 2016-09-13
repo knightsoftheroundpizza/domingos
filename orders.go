@@ -4,34 +4,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/boltdb/bolt"
+	"github.com/knightsoftheroundpizza/domingos/dominos"
 	"io/ioutil"
 	"net/http"
-	"github.com/knightsoftheroundpizza/domingos/dominos"
 )
 
 const ORDER_BUCKET = "orders"
 
 type Order struct {
-	Id     string `json:id`
-	Status string `json:status`
+	Id     string `json:"id,omitempty"`
+	Status string `json:"status,omitempty"`
 
-	Street       string `json:street`
-	StreetNumber int    `json:streetNumber`
-	City         string `json:city`
-	Province     string `json:province`
-	PostalCode   string `json:postalCode`
-	StoreId      string `json:storeId`
+	Street       string `json:"street"`
+	StreetNumber int    `json:"streetNumber"`
+	City         string `json:"city"`
+	Province     string `json:"province"`
+	PostalCode   string `json:"postalCode"`
+	StoreId      string `json:"storeId"`
 
-	Email     string `json:email`
-	FirstName string `json:firstName`
-	LastName  string `json:lastName`
-	Phone     string `json:phone`
+	Email     string `json:"email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Phone     string `json:"phone"`
 
-	Products []Product `json:products`
+	Products []Product `json:"products"`
 }
 
 type Product struct {
-	Code string `json:code`
+	Code string `json:"code"`
 }
 
 type OrdersDb struct {
@@ -118,7 +118,26 @@ func (oh *OrdersHandler) GetOrdersHandler(w http.ResponseWriter, r *http.Request
 //Acutal order
 func (oh *OrdersHandler) PostOrdersHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte("{\"id\": \"test\"}"))
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var order Order
+	err := json.Unmarshal(reqBody, &order)
+
+	if err != nil {
+		w.Write([]byte(`{"error":"Invalid order object"}`))
+	} else {
+		marshalled, _ := json.Marshal(order)
+		w.Write(marshalled)
+	}
+
+	// req, _ := http.NewRequest("POST", DominosURL+"/price-order", nil)
+	// req.Header.Add("Content-Type", "application/json")
+	// client := &http.Client{}
+	// resp, _ := client.Do(req)
+	// defer resp.Body.Close()
+	// body, _ := ioutil.ReadAll(resp.Body)
+	// w.Header().Set("Content-Type", "application/json")
+	// w.Write(body)
+
 }
 
 //Pricing an order
@@ -133,11 +152,12 @@ func (oh *OrdersHandler) PriceOrderHandler(w http.ResponseWriter, r *http.Reques
 
 	w.Header().Set("Content-Type", "application/json")
 	result, _ := json.Marshal(map[string]float32{
-		"Net": order.Amounts["Net"],
-		"Tax": order.Amounts["Tax"],
+		"Net":   order.Amounts["Net"],
+		"Tax":   order.Amounts["Tax"],
 		"Total": order.Amounts["Payment"],
 	})
 	w.Write(result)
+
 }
 
 //Reordering
