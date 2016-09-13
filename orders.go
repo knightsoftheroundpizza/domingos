@@ -11,9 +11,26 @@ import (
 const ORDER_BUCKET = "orders"
 
 type Order struct {
-	Id       string `json:id`
-	Status   string `json:status`
-	Customer string `json:customer`
+	Id     string `json:id`
+	Status string `json:status`
+
+	Street       string `json:street`
+	StreetNumber int    `json:streetNumber`
+	City         string `json:city`
+	Province     string `json:province`
+	PostalCode   string `json:postalCode`
+	StoreId      string `json:storeId`
+
+	Email     string `json:email`
+	FirstName string `json:firstName`
+	LastName  string `json:lastName`
+	Phone     string `json:phone`
+
+	Products []Product `json:products`
+}
+
+type Product struct {
+	Code string `json:code`
 }
 
 type OrdersDb struct {
@@ -97,11 +114,13 @@ func (oh *OrdersHandler) GetOrdersHandler(w http.ResponseWriter, r *http.Request
 
 }
 
+//Acutal order
 func (oh *OrdersHandler) PostOrdersHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte("{\"id\": \"test\"}"))
 }
 
+//Pricing an order
 func (oh *OrdersHandler) PriceOrderHandler(w http.ResponseWriter, r *http.Request) {
 	req, _ := http.NewRequest("POST", DominosURL+"/price-order", nil)
 	req.Header.Add("Content-Type", "application/json")
@@ -115,6 +134,7 @@ func (oh *OrdersHandler) PriceOrderHandler(w http.ResponseWriter, r *http.Reques
 	w.Write([]byte("{\"id\": \"test\"}"))
 }
 
+//Reordering
 func (oh *OrdersHandler) PostOrdersOnIdHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte("{\"id\": \"test\"}"))
